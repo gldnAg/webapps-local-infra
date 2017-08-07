@@ -1,0 +1,36 @@
+version: '2'
+
+networks:
+  bridge:
+    driver: bridge
+
+services:
+  ldap:
+    image: accenture/adop-ldap
+    container_name: ldap
+    ports:
+      - "389:389"
+    environment:
+      - SLAPD_PASSWORD=secret_password
+      - SLAPD_DOMAIN=ldap.service.local
+      - SLAPD_FULL_DOMAIN=dc=ldap,dc=service,dc=local
+    volumes:
+      - ldap-config-data:/etc/ldap
+      - ldap-app-data:/var/lib/ldap
+    networks:
+      - bridge
+  phpldapadmin:
+    image: dinkel/phpldapadmin
+    container_name: phpldapadmin
+    ports:
+      - "8010:80"
+    environment:
+      - LDAP_SERVER_HOST=ldap
+    links:
+      - ldap
+    networks:
+      - bridge
+
+volumes:
+  ldap-config-data: {}
+  ldap-app-data: {}

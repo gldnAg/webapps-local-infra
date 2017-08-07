@@ -1,0 +1,22 @@
+version: '2'
+
+networks:
+  bridge:
+    driver: bridge
+
+services:
+  rancher-server:
+    image: rancher/server
+    container_name: rancher-server
+    restart: always
+    ports:
+      - '8001:8080'
+    volumes:
+      - rancher-server-data:/var/lib/cattle
+      - rancher-server-db-data:/var/lib/mysql 
+    networks:
+      - bridge
+      
+volumes:
+  rancher-server-data: {}
+  rancher-server-db-data: {}
